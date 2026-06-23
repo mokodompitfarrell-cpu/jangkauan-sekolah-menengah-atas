@@ -1,0 +1,1 @@
+# jangkauan-sekolah-menengah-atas
