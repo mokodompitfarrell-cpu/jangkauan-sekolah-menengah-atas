@@ -18,10 +18,82 @@
             padding: 0;
             margin: 0;
         }
+
+        /* --- STYLING WELCOME BOX & BLUR BACKGROUND --- */
+        .welcome-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4); /* Efek gelap transparan */
+            backdrop-filter: blur(8px); /* Membuat background blur */
+            -webkit-backdrop-filter: blur(8px); /* Dukungan Safari */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Memastikan berada di paling atas peta */
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .welcome-box {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 90%;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .welcome-box h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+            color: #2c3e50;
+        }
+
+        .welcome-box h2 {
+            margin: 0 0 20px 0;
+            font-size: 18px;
+            color: #7f8c8d;
+            font-weight: 400;
+        }
+
+        .welcome-btn {
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .welcome-btn:hover {
+            background-color: #3498db;
+        }
+
+        /* Kelas untuk menghilangkan welcome box */
+        .welcome-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.05);
+        }
         </style>
-        <title></title>
+        <title>WebGIS - Farrell Ardistyo Mokodompit</title>
     </head>
     <body>
+        <div class="welcome-overlay" id="welcomeOverlay">
+            <div class="welcome-box">
+                <h1>Selamat Datang di WebGIS</h1>
+                <h2>Farrell Ardistyo Mokodompit</h2>
+                <button class="welcome-btn" onclick="closeWelcomeBox()">Lihat Peta</button>
+            </div>
+        </div>
+
         <div id="map">
         </div>
         <script src="js/qgis2web_expressions.js"></script>
@@ -40,6 +112,11 @@
         <script src="data/Servicearealines_3.js"></script>
         <script src="data/smadimalang_4.js"></script>
         <script>
+        // FUNGSI JAVASCRIPT UNTUK MENUTUP WELCOME BOX
+        function closeWelcomeBox() {
+            document.getElementById('welcomeOverlay').classList.add('hidden');
+        }
+
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
         }).fitBounds([[-8.093989724678622,112.49370120630185],[-7.864241411014357,112.80231834405983]]);
@@ -499,48 +576,4 @@
         }
         map.createPane('pane_smadimalang_4');
         map.getPane('pane_smadimalang_4').style.zIndex = 404;
-        map.getPane('pane_smadimalang_4').style['mix-blend-mode'] = 'normal';
-        var layer_smadimalang_4 = new L.geoJson(json_smadimalang_4, {
-            attribution: '',
-            interactive: true,
-            dataVar: 'json_smadimalang_4',
-            layerName: 'layer_smadimalang_4',
-            pane: 'pane_smadimalang_4',
-            onEachFeature: pop_smadimalang_4,
-            pointToLayer: function (feature, latlng) {
-                var context = {
-                    feature: feature,
-                    variables: {}
-                };
-                return L.circleMarker(latlng, style_smadimalang_4_0(feature));
-            },
-        });
-        bounds_group.addLayer(layer_smadimalang_4);
-        map.addLayer(layer_smadimalang_4);
-        setBounds();
-        var i = 0;
-        layer_smadimalang_4.eachLayer(function(layer) {
-            var context = {
-                feature: layer.feature,
-                variables: {}
-            };
-            layer.bindTooltip((layer.feature.properties['Name'] !== null?String('<div style="color: #323232; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Name']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_smadimalang_4'});
-            labels.push(layer);
-            totalMarkers += 1;
-              layer.added = true;
-              addLabel(layer, i);
-              i++;
-        });
-        resetLabels([layer_smadimalang_4]);
-        map.on("zoomend", function(){
-            resetLabels([layer_smadimalang_4]);
-        });
-        map.on("layeradd", function(){
-            resetLabels([layer_smadimalang_4]);
-        });
-        map.on("layerremove", function(){
-            resetLabels([layer_smadimalang_4]);
-        });
-        </script>        
-    </body>
-</html>
+        map.getPane('pane_smad
